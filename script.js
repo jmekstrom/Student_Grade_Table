@@ -16,13 +16,13 @@ var gradeInput = $("#studentGrade").val();
 /**
  * addClicked - Event Handler when user clicks the add button
  */
-function addClicked(){
+function addClicked() {
     addStudent();
 }
 /**
  * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
  */
-function cancelClicked(){
+function cancelClicked() {
     $("#studentName").val("");
     $("#course").val("");
     $("#studentGrade").val("");
@@ -32,35 +32,41 @@ function cancelClicked(){
  *
  * @return undefined
  */
-function addStudent(){
+function addStudent() {
     var newStudent = {};
-    if((nameInput === '')||(courseInput === '')||(gradeInput === '')) {
+    //check if any of the inputs are blank, if they are then it will call the cancel function.
+    if ((nameInput === '') || (courseInput === '') || (gradeInput === '')) {
         alert('Invalid Input');
         cancelClicked();
+    } else {
+        newStudent.studentName = nameInput;
+        newStudent.studentCourse = courseInput;
+        newStudent.studentGrade = gradeInput;
+        $(student_array).push(newStudent);
     }
-    newStudent.studentName = nameInput;
-    newStudent.studentCourse = courseInput;
-    newStudent.studentGrade = gradeInput;
-    $(student_array).push(newStudent);
 }
 /**
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
-function clearAddStudentForm(){}
+function clearAddStudentForm() {
+    cancelClicked()
+}
 /**
  * calculateAverage - loop through the global student array and calculate average grade and return that value
  * @returns {number}
  */
-function calculateAverage(){}
+function calculateAverage() {
+}
 /**
  * updateData - centralized function to update the average and call student list update
  */
-function updateData(){}
+function updateData() {
+}
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
-function updateStudentList(){
-    for(var i = 0; i < student_array.length; i++){
+function updateStudentList() {
+    for (var i = 0; i < student_array.length; i++) {
 
     }
 }
@@ -69,14 +75,14 @@ function updateStudentList(){
  * into the .student_list tbody
  * @param studentObj
  */
-function addStudentToDom(){
-    var stuName = $('<div>',{
+function addStudentToDom() {
+    var stuName = $('<div>', {
         text: newStudent.studentName
     });
-    var stuCourse = $('<div>',{
+    var stuCourse = $('<div>', {
         text: newStudent.studentCourse
     });
-    var stuGrade = $('<div>',{
+    var stuGrade = $('<div>', {
         text: newStudent.studentGrade
     });
     $(".student_list tbody").append(stuName, stuCourse, stuGrade);
@@ -84,7 +90,8 @@ function addStudentToDom(){
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
-function reset(){}
+function reset() {
+}
 
 /**
  * Listen for the document to load and reset the data to the initial state

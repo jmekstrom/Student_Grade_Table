@@ -51,7 +51,7 @@ function addStudent() {
     courseInput = $("#course").val();
     gradeInput = $("#studentGrade").val();
     //check if any of the inputs are blank, if they are then it will call the cancel function.
-    if ((nameInput === '') || (courseInput === '') || (gradeInput === '')) {
+    if ((nameInput === '') || (courseInput === '') || (gradeInput === '')||(gradeInput<0)||(gradeInput>100)) {
         alert('Invalid Input Values');
         clearAddStudentForm();
     } else {
@@ -112,12 +112,12 @@ function updateStudentList() {
         var newRow = $('<tr>', {
             'data-index': k
         })
-        var delTD = $('<td>',{
-            class: 'text-center delTD'
+        var delTD = $('<td>', {
+            class: 'delTD'
         })
         var delButton = $('<button>', {
             type: 'button',
-            class: 'btn btn-danger delButton btn-xs text-center',
+            class: 'btn btn-danger delButton btn-xs',
             id: 'studentIndex' + k,
             text: 'Remove'
         })

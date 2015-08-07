@@ -6,17 +6,20 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
+    <style>
+
+    </style>
 </head>
 <body>
-<div class="">
+<div class="container-fluid">
     <div class="">
         <!-- only show this element when the isnt on mobile -->
-        <h1>Student Grade Table
-            <small>Grade Average : <span class="avgGrade"></span></small>
+        <h1 class="hidden-xs page-header">Student Grade Table
+            <small class="pull-right">Grade Average : <span class="avgGrade pull-right"></span></small>
         </h1>
         <!-- only show this element when the user gets to a mobile version -->
-        <h3>Student Grade Table
-            <small>Grade Average : <span class="avgGrade"></span></small>
+        <h3 class="visible-xs page-header">Student Grade Table<br>
+            <small class="pull-right">Grade Average : <span class="avgGrade pull-right"></span></small>
         </h3>
     </div>
     <div class="student-add-form">
@@ -41,8 +44,8 @@
             <input type="text" class="" name="studentGrade" id="studentGrade"
                    placeholder="Student Grade">
         </div>
-        <button type="button" class="" onclick="">Add</button>
-        <button type="button" class="" onclick="">Cancel</button>
+        <button type="button" class="btn btn-success" id="addButton" onclick="">Add</button>
+        <button type="button" class="btn btn-default" id="cancelButton" onclick="">Cancel</button>
     </div>
     <div class="student-list-container">
         <table class="student-list">

@@ -51,7 +51,8 @@ function addStudent() {
         newStudent.name = nameInput;
         newStudent.course = courseInput;
         newStudent.grade = gradeInput;
-        student_array.push(newStudent)
+        student_array.push(newStudent);
+        updateData();
     }
     //After a new student has been added we call the clear inputs function to clear the input fields
     clearAddStudentForm();
@@ -102,7 +103,7 @@ function updateStudentList() {
         })
     }
     $('tbody').append(newRow);
-    $('tr').append(htmlName, htmlCourse, htmlGrade);
+    $(newRow).append(htmlName, htmlCourse, htmlGrade);
 }
 /**
  * addStudentToDom - take in a student object, create html elements from the values and then append the elements

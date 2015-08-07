@@ -2,6 +2,7 @@
  * Define all global variables here
  */
 var gradeAverage;
+var newStudent ={};
 /**
  * student_array - global array to hold student objects
  * @type {Array}
@@ -38,7 +39,7 @@ $(document).ready(function () {
  */
 function addStudent() {
     console.log('add student function was called');
-    var newStudent = {};
+    newStudent = {};
     nameInput = $("#studentName").val();
     courseInput = $("#course").val();
     gradeInput = $("#studentGrade").val();
@@ -52,6 +53,8 @@ function addStudent() {
         newStudent.grade = gradeInput;
         student_array.push(newStudent)
     }
+    //After a new student has been added we call the clear inputs function to clear the input fields
+    clearAddStudentForm();
 }
 /**
  * clearAddStudentForm - clears out the form values based on inputIds variable
@@ -117,16 +120,20 @@ function addStudentToDom() {
     var stuGrade = $('<td>', {
         text: newStudent.grade
     });
-    $(".student_list tbody").append(stuName, stuCourse, stuGrade);
+    $('tr').append(stuName,stuCourse,stuGrade);
+    $('tbody').append(stuName, stuCourse, stuGrade);
 }
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
 function reset() {
+    gradeAverage;
+    newStudent = {};
+    clearAddStudentForm()
     student_array = [];
 }
 
 /**
  * Listen for the document to load and reset the data to the initial state
  */
-//$(document).ready(reset());
+$(document).ready(reset());

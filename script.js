@@ -49,7 +49,7 @@ function addStudent() {
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentForm() {
-    cancelClicked()
+    #('#studentName').val('');
 }
 /**
  * calculateAverage - loop through the global student array and calculate average grade and return that value
@@ -91,6 +91,7 @@ function addStudentToDom() {
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
 function reset() {
+    student_array = [];
 }
 
 /**

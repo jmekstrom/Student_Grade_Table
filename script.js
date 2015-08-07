@@ -51,7 +51,7 @@ function addStudent() {
     courseInput = $("#course").val();
     gradeInput = $("#studentGrade").val();
     //check if any of the inputs are blank, if they are then it will call the cancel function.
-    if ((nameInput === '') || (courseInput === '') || (gradeInput === '')||(gradeInput<0)||(gradeInput>100)) {
+    if ((nameInput === '') || (courseInput === '') || (gradeInput === '') || (gradeInput < 0) || (gradeInput > 100)) {
         alert('Invalid Input Values');
         clearAddStudentForm();
     } else {
@@ -85,8 +85,10 @@ function calculateAverage() {
         gradeSum += parseFloat(student_array[i].grade);
     }
     gradeAverage = gradeSum / student_array.length
+
     $('.avgGrade').empty();
     $('.avgGrade').text(gradeAverage.toFixed(1));
+
 }
 /**
  * updateData - centralized function to update the average and call student list update
@@ -94,6 +96,7 @@ function calculateAverage() {
 function updateData() {
     calculateAverage();
     updateStudentList();
+
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
@@ -124,6 +127,7 @@ function updateStudentList() {
         $('tbody').append(newRow);
         $(newRow).append(htmlName, htmlCourse, htmlGrade, delTD);
         $(delTD).append(delButton);
+
         checklist();
     }
 }
@@ -149,10 +153,13 @@ function addStudentToDom() {
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
 function reset() {
+    console.log('document has been reset');
     gradeAverage;
     newStudent = {};
     clearAddStudentForm()
     student_array = [];
+    checklist();
+
 }
 
 /**

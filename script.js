@@ -1,6 +1,9 @@
 /**
  * Define all global variables here
  */
+var nameInput = '';
+var courseInput = '';
+var gradeInput = '';
 /**
  * student_array - global array to hold student objects
  * @type {Array}
@@ -10,15 +13,16 @@ var student_array = [];
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
  */
-var nameInput = $("#studentName").val();
-var courseInput = $("#course").val();
-var gradeInput = $("#studentGrade").val();
+
 /**
  * addClicked - Event Handler when user clicks the add button
  */
-function addClicked() {
-    addStudent();
-}
+$(document).ready(function () {
+    $("#addButton").click(function () {
+        console.log('add button was clicked');
+        addStudent();
+    });
+});
 /**
  * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
  */
@@ -33,23 +37,26 @@ function cancelClicked() {
  * @return undefined
  */
 function addStudent() {
-    var newStudent = {};
+    console.log('add student function was called');
+    newStudent = {};
     //check if any of the inputs are blank, if they are then it will call the cancel function.
-    if ((nameInput === '') || (courseInput === '') || (gradeInput === '')) {
-        alert('Invalid Input');
-        cancelClicked();
-    } else {
-        newStudent.studentName = nameInput;
-        newStudent.studentCourse = courseInput;
-        newStudent.studentGrade = gradeInput;
-        $(student_array).push(newStudent);
+    nameInput = $("#studentName").val();
+    courseInput = $("#course").val();
+    gradeInput = $("#studentGrade").val();
+    if((nameInput === '')||(courseInput === '')||(gradeInput === '')){
+        alert('Invalid Input Values');
+    }else{
+        newStudent.name = nameInput;
+        newStudent.course = courseInput;
+        newStudent.grade = gradeInput;
+        student_array.push(newStudent)
     }
 }
 /**
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentForm() {
-    #('#studentName').val('');
+    $('#studentName').val('');
 }
 /**
  * calculateAverage - loop through the global student array and calculate average grade and return that value
@@ -97,4 +104,4 @@ function reset() {
 /**
  * Listen for the document to load and reset the data to the initial state
  */
-$(document).ready(reset());
+//$(document).ready(reset());

@@ -8,6 +8,13 @@ var newStudent = {};
  * @type {Array}
  */
 var student_array = [];
+function checklist() {
+    if (student_array.length > 0) {
+        $('#blankTable').hide()
+    } else {
+        $('#blankTable').show()
+    }
+};
 /**
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
@@ -61,6 +68,7 @@ function addStudent() {
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentForm() {
+    console.log('Input fields have been cleared');
     $('#studentName').val("");
     $('#course').val("");
     $('#studentGrade').val("");
@@ -104,9 +112,16 @@ function updateStudentList() {
         var newRow = $('<tr>', {
             'data-index': k
         })
+        var delButton = $('<button>', {
+            type: 'button',
+            class: 'btn btn-danger delButton',
+            id: 'studentIndex' + k,
+            text: 'Remove'
+        });
+        $('tbody').append(newRow);
+        $(newRow).append(htmlName, htmlCourse, htmlGrade,delButton);
+        checklist();
     }
-    $('tbody').append(newRow);
-    $(newRow).append(htmlName, htmlCourse, htmlGrade);
 }
 /**
  * addStudentToDom - take in a student object, create html elements from the values and then append the elements
@@ -130,10 +145,13 @@ function addStudentToDom() {
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
 function reset() {
+    console.log('document has been reset');
     gradeAverage;
     newStudent = {};
     clearAddStudentForm()
     student_array = [];
+    checklist();
+
 }
 
 /**

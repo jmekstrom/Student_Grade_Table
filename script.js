@@ -59,9 +59,7 @@ function addStudent() {
         newStudent.course = courseInput;
         newStudent.grade = gradeInput;
         student_array.push(newStudent);
-        $('tbody').empty();
         updateData();
-        calculateAverage();
     }
     //After a new student has been added we call the clear inputs function to clear the input fields
     clearAddStudentForm();
@@ -94,14 +92,15 @@ function calculateAverage() {
  * updateData - centralized function to update the average and call student list update
  */
 function updateData() {
-    calculateAverage();
     updateStudentList();
+    calculateAverage();
 
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
 function updateStudentList() {
+    $('tbody').empty();
     for (var k = 0; k < student_array.length; k++) {
         var htmlName = $('<td>', {
             text: student_array[k].name

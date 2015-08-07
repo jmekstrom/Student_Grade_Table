@@ -59,7 +59,9 @@ function addStudent() {
         newStudent.course = courseInput;
         newStudent.grade = gradeInput;
         student_array.push(newStudent);
+        $('tbody').empty();
         updateData();
+        calculateAverage();
     }
     //After a new student has been added we call the clear inputs function to clear the input fields
     clearAddStudentForm();
@@ -80,10 +82,11 @@ function clearAddStudentForm() {
 function calculateAverage() {
     var gradeSum = 0;
     for (var i = 0; i < student_array.length; i++) {
-        console.log(student_array[i].grade);
         gradeSum += parseFloat(student_array[i].grade);
     }
     gradeAverage = gradeSum / student_array.length
+    $('.avgGrade').empty();
+    $('.avgGrade').text(gradeAverage.toFixed(1));
 }
 /**
  * updateData - centralized function to update the average and call student list update
@@ -109,14 +112,18 @@ function updateStudentList() {
         var newRow = $('<tr>', {
             'data-index': k
         })
+        var delTD = $('<td>',{
+            class: 'text-center delTD'
+        })
         var delButton = $('<button>', {
             type: 'button',
-            class: 'btn btn-danger delButton',
+            class: 'btn btn-danger delButton btn-xs text-center',
             id: 'studentIndex' + k,
             text: 'Remove'
-        });
+        })
         $('tbody').append(newRow);
-        $(newRow).append(htmlName, htmlCourse, htmlGrade,delButton);
+        $(newRow).append(htmlName, htmlCourse, htmlGrade, delTD);
+        $(delTD).append(delButton);
         checklist();
     }
 }
@@ -142,13 +149,10 @@ function addStudentToDom() {
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
 function reset() {
-    console.log('document has been reset');
     gradeAverage;
     newStudent = {};
     clearAddStudentForm()
     student_array = [];
-    checklist();
-
 }
 
 /**

@@ -2,7 +2,7 @@
  * Define all global variables here
  */
 var gradeAverage;
-var newStudent ={};
+var newStudent = {};
 /**
  * student_array - global array to hold student objects
  * @type {Array}
@@ -88,22 +88,21 @@ function updateData() {
  */
 function updateStudentList() {
     for (var k = 0; k < student_array.length; k++) {
-        var htmlName = $('<td>',{
+        var htmlName = $('<td>', {
             text: student_array[k].name
         })
-        var htmlCourse = $('<td>',{
+        var htmlCourse = $('<td>', {
             text: student_array[k].course
         })
-        var htmlGrade = $('<td>',{
+        var htmlGrade = $('<td>', {
             text: student_array[k].grade
         })
-        var newRow = $('<tr>',{
+        var newRow = $('<tr>', {
             'data-index': k
         })
-        $('tr').append(htmlName,htmlCourse,htmlGrade);
-        $('tbody').append(newRow);
-
     }
+    $('tbody').append(newRow);
+    $('tr').append(htmlName, htmlCourse, htmlGrade);
 }
 /**
  * addStudentToDom - take in a student object, create html elements from the values and then append the elements
@@ -120,7 +119,7 @@ function addStudentToDom() {
     var stuGrade = $('<td>', {
         text: newStudent.grade
     });
-    $('tr').append(stuName,stuCourse,stuGrade);
+    $('tr').append(stuName, stuCourse, stuGrade);
     $('tbody').append(stuName, stuCourse, stuGrade);
 }
 /**

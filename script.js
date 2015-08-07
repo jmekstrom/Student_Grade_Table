@@ -76,6 +76,8 @@ function calculateAverage() {
         gradeSum += parseFloat(student_array[i].grade);
     }
     gradeAverage = gradeSum / student_array.length
+    gradeAverage.toString();
+    $("avgGrade").text("hello");
 }
 /**
  * updateData - centralized function to update the average and call student list update
@@ -83,6 +85,7 @@ function calculateAverage() {
 function updateData() {
     calculateAverage();
     updateStudentList();
+
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body

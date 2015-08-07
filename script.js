@@ -85,16 +85,20 @@ function updateData() {
  */
 function updateStudentList() {
     for (var k = 0; k < student_array.length; k++) {
-        var htmlName = $('<div>',{
+        var htmlName = $('<td>',{
             text: student_array[k].name
         })
-        var htmlCourse = $('<div>',{
+        var htmlCourse = $('<td>',{
             text: student_array[k].course
         })
-        var htmlgrade = $('<div>',{
+        var htmlGrade = $('<td>',{
             text: student_array[k].grade
         })
-
+        var newRow = $('<tr>',{
+            'data-index': k
+        })
+        $('tr').append(htmlName,htmlCourse,htmlGrade);
+        $('tbody').append(newRow);
 
     }
 }
@@ -104,14 +108,14 @@ function updateStudentList() {
  * @param studentObj
  */
 function addStudentToDom() {
-    var stuName = $('<div>', {
-        text: newStudent.studentName
+    var stuName = $('<td>', {
+        text: newStudent.name
     });
-    var stuCourse = $('<div>', {
-        text: newStudent.studentCourse
+    var stuCourse = $('<td>', {
+        text: newStudent.course
     });
-    var stuGrade = $('<div>', {
-        text: newStudent.studentGrade
+    var stuGrade = $('<td>', {
+        text: newStudent.grade
     });
     $(".student_list tbody").append(stuName, stuCourse, stuGrade);
 }

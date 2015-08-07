@@ -1,9 +1,7 @@
 /**
  * Define all global variables here
  */
-var nameInput = '';
-var courseInput = '';
-var gradeInput = '';
+var gradeAverage;
 /**
  * student_array - global array to hold student objects
  * @type {Array}
@@ -13,7 +11,9 @@ var student_array = [];
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
  */
-
+var nameInput = '';
+var courseInput = '';
+var gradeInput = '';
 /**
  * addClicked - Event Handler when user clicks the add button
  */
@@ -26,11 +26,11 @@ $(document).ready(function () {
 /**
  * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
  */
-function cancelClicked() {
-    $("#studentName").val("");
-    $("#course").val("");
-    $("#studentGrade").val("");
-}
+$(document).ready(function () {
+    $("#cancelButton").click(function () {
+        clearAddStudentForm();
+    })
+})
 /**
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
  *
@@ -38,14 +38,15 @@ function cancelClicked() {
  */
 function addStudent() {
     console.log('add student function was called');
-    newStudent = {};
-    //check if any of the inputs are blank, if they are then it will call the cancel function.
+    var newStudent = {};
     nameInput = $("#studentName").val();
     courseInput = $("#course").val();
     gradeInput = $("#studentGrade").val();
-    if((nameInput === '')||(courseInput === '')||(gradeInput === '')){
+    //check if any of the inputs are blank, if they are then it will call the cancel function.
+    if ((nameInput === '') || (courseInput === '') || (gradeInput === '')) {
         alert('Invalid Input Values');
-    }else{
+        clearAddStudentForm();
+    } else {
         newStudent.name = nameInput;
         newStudent.course = courseInput;
         newStudent.grade = gradeInput;
@@ -56,24 +57,44 @@ function addStudent() {
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentForm() {
-    $('#studentName').val('');
+    $('#studentName').val("");
+    $('#course').val("");
+    $('#studentGrade').val("");
 }
 /**
  * calculateAverage - loop through the global student array and calculate average grade and return that value
  * @returns {number}
  */
 function calculateAverage() {
+    var gradeSum = 0;
+    for (var i = 0; i < student_array.length; i++) {
+        console.log(student_array[i].grade);
+        gradeSum += parseFloat(student_array[i].grade);
+    }
+    gradeAverage = gradeSum / student_array.length
 }
 /**
  * updateData - centralized function to update the average and call student list update
  */
 function updateData() {
+    calculateAverage();
+    updateStudentList();
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
 function updateStudentList() {
-    for (var i = 0; i < student_array.length; i++) {
+    for (var k = 0; k < student_array.length; k++) {
+        var htmlName = $('<div>',{
+            text: student_array[k].name
+        })
+        var htmlCourse = $('<div>',{
+            text: student_array[k].course
+        })
+        var htmlgrade = $('<div>',{
+            text: student_array[k].grade
+        })
+
 
     }
 }

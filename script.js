@@ -51,6 +51,7 @@ function addStudent() {
     courseInput = $("#course").val();
     gradeInput = $("#studentGrade").val();
     //check if any of the inputs are blank, if they are then it will call the cancel function.
+    //And alert the user.
     if ((nameInput === '') || (courseInput === '') || (gradeInput === '') || (gradeInput < 0) || (gradeInput > 100)) {
         alert('Invalid Input Values');
         clearAddStudentForm();
@@ -85,7 +86,11 @@ function calculateAverage() {
         gradeSum += parseFloat(student_array[i].grade);
     }
     gradeAverage = gradeSum / student_array.length
-
+    //Here I check if the average is a number or not. If it is Not A Number(NaN returns true)
+    //I set a default value of 0 to the average.
+    if (isNaN(gradeAverage) == true) {
+        gradeAverage = 0;
+    }
     $('.avgGrade').empty();
     $('.avgGrade').text(gradeAverage.toFixed(1));
 
@@ -112,8 +117,7 @@ function updateStudentList() {
         var htmlGrade = $('<td>', {
             text: student_array[k].grade
         })
-        var newRow = $('<tr>', {
-        })
+        var newRow = $('<tr>', {})
         var delTD = $('<td>', {
             class: 'delTD',
         })
@@ -122,7 +126,7 @@ function updateStudentList() {
             class: 'btn btn-danger delButton btn-xs',
             'data-index': k,
             text: 'Remove',
-            onclick:'deleteStudent('+k+')'
+            onclick: 'deleteStudent(' + k + ')'
         })
         $('tbody').append(newRow);
         $(newRow).append(htmlName, htmlCourse, htmlGrade, delTD);
@@ -171,10 +175,11 @@ $(document).ready(reset());
 /**
  * Remove Student Button
  **/
-function deleteStudent(k){
-    student_array.splice(k,1);
+function deleteStudent(k) {
+    student_array.splice(k, 1);
     console.log(student_array);
     $('tbody').empty();
     updateStudentList();
+    calculateAverage();
     checklist();
 }

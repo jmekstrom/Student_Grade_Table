@@ -30,7 +30,7 @@ var uniqueID = 0;
 $(document).ready(function () {
     $("#addButton").click(function () {
         console.log('add button was clicked');
-        addStudent();
+        addStudentToDom();
     });
 });
 /**
@@ -147,17 +147,48 @@ function updateStudentList() {
  * @param studentObj
  */
 function addStudentToDom() {
-    var stuName = $('<td>', {
-        text: newStudent.name
-    });
-    var stuCourse = $('<td>', {
-        text: newStudent.course
-    });
-    var stuGrade = $('<td>', {
-        text: newStudent.grade
-    });
-    $('tr').append(stuName, stuCourse, stuGrade);
-    $('tbody').append(stuName, stuCourse, stuGrade);
+    newStudent = {};
+    nameInput = $("#studentName").val();
+    courseInput = $("#course").val();
+    gradeInput = $("#studentGrade").val();
+    if ((nameInput === '') || (courseInput === '') || (gradeInput === '') || (gradeInput < 0) || (gradeInput > 100)) {
+        alert('Invalid Input Values');
+        clearAddStudentForm();
+    } else {
+        newStudent.name = nameInput;
+        newStudent.course = courseInput;
+        newStudent.grade = gradeInput;
+        newStudent.ID = uniqueID++;
+        student_array.push(newStudent);
+    }
+    var htmlName = $('<td>', {
+        text: student_array[student_array.length - 1].name
+    })
+    var htmlCourse = $('<td>', {
+        text: student_array[student_array.length - 1].course
+    })
+    var htmlGrade = $('<td>', {
+        text: student_array[student_array.length - 1].grade
+    })
+    var newRow = $('<tr>', {
+        'data-index': student_array[student_array.length - 1].ID
+    })
+    var delTD = $('<td>', {
+        class: 'delTD',
+    })
+    var delButton = $('<button>', {
+        type: 'button',
+        class: 'btn btn-danger delButton btn-xs',
+        'data-index': student_array[student_array.length - 1].ID,
+        text: 'Remove',
+        onclick: 'deleteStudent(' + student_array[student_array.length - 1].ID + ')'
+    })
+    $('tbody').append(newRow);
+    $(newRow).append(htmlName, htmlCourse, htmlGrade, delTD);
+    $(delTD).append(delButton);
+    checklist();
+    clearAddStudentForm();
+    calculateAverage();
 }
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state

@@ -22,6 +22,8 @@ function checklist() {
 var nameInput = '';
 var courseInput = '';
 var gradeInput = '';
+var uniqueID = 0;
+
 /**
  * addClicked - Event Handler when user clicks the add button
  */
@@ -45,12 +47,14 @@ $(document).ready(function () {
  * @return undefined
  */
 function addStudent() {
+
     console.log('add student function was called');
     newStudent = {};
     nameInput = $("#studentName").val();
     courseInput = $("#course").val();
     gradeInput = $("#studentGrade").val();
     //check if any of the inputs are blank, if they are then it will call the cancel function.
+    //And alert the user.
     if ((nameInput === '') || (courseInput === '') || (gradeInput === '') || (gradeInput < 0) || (gradeInput > 100)) {
         alert('Invalid Input Values');
         clearAddStudentForm();
@@ -58,6 +62,7 @@ function addStudent() {
         newStudent.name = nameInput;
         newStudent.course = courseInput;
         newStudent.grade = gradeInput;
+        newStudent.ID = uniqueID++;
         student_array.push(newStudent);
         updateData();
     }
@@ -82,12 +87,17 @@ function calculateAverage() {
     for (var i = 0; i < student_array.length; i++) {
         gradeSum += parseFloat(student_array[i].grade);
     }
-    gradeAverage = gradeSum / student_array.length
-
+    gradeAverage = gradeSum / student_array.length;
+    //Here I check if the average is a number or not. If it is Not A Number(NaN returns true)
+    //I set a default value of 0 to the average.
+    if (isNaN(gradeAverage) == true) {
+        gradeAverage = 0;
+    }
     $('.avgGrade').empty();
     $('.avgGrade').text(gradeAverage.toFixed(1));
 
 }
+
 /**
  * updateData - centralized function to update the average and call student list update
  */
@@ -112,6 +122,7 @@ function updateStudentList() {
             text: student_array[k].grade
         })
         var newRow = $('<tr>', {
+            'data-index': student_array[k].ID
         })
         var delTD = $('<td>', {
             class: 'delTD',
@@ -119,9 +130,9 @@ function updateStudentList() {
         var delButton = $('<button>', {
             type: 'button',
             class: 'btn btn-danger delButton btn-xs',
-            'data-index': k,
+            'data-index': student_array[k].ID,
             text: 'Remove',
-            onclick:'deleteStudent('+k+')'
+            onclick: 'deleteStudent(' + student_array[k].ID + ')'
         })
         $('tbody').append(newRow);
         $(newRow).append(htmlName, htmlCourse, htmlGrade, delTD);
@@ -170,10 +181,15 @@ $(document).ready(reset());
 /**
  * Remove Student Button
  **/
-function deleteStudent(k){
-    student_array.splice(k,1);
+function deleteStudent(objectID) {
+    for (var j = 0; j < student_array.length; j++) {
+        if (student_array[j].ID == objectID) {
+            console.log('It\'s uniqueID is: ' + student_array[j].ID)
+            student_array.splice(j, 1);
+        }
+    }
     console.log(student_array);
-    $('tbody').empty();
-    updateStudentList();
+    $('tr[data-index="' + objectID + '"]').remove();
+    calculateAverage();
     checklist();
 }

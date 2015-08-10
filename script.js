@@ -112,16 +112,16 @@ function updateStudentList() {
             text: student_array[k].grade
         })
         var newRow = $('<tr>', {
-            'data-index': k
         })
         var delTD = $('<td>', {
-            class: 'delTD'
+            class: 'delTD',
         })
         var delButton = $('<button>', {
             type: 'button',
             class: 'btn btn-danger delButton btn-xs',
-            id: 'studentIndex' + k,
-            text: 'Remove'
+            'data-index': k,
+            text: 'Remove',
+            onclick:'deleteStudent('+k+')'
         })
         $('tbody').append(newRow);
         $(newRow).append(htmlName, htmlCourse, htmlGrade, delTD);
@@ -165,3 +165,15 @@ function reset() {
  * Listen for the document to load and reset the data to the initial state
  */
 $(document).ready(reset());
+
+
+/**
+ * Remove Student Button
+ **/
+function deleteStudent(k){
+    student_array.splice(k,1);
+    console.log(student_array);
+    $('tbody').empty();
+    updateStudentList();
+    checklist();
+}

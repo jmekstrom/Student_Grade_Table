@@ -9,10 +9,11 @@ $(document).ready(function(){
        },
         success: function(result){
             for(var i in result.data){
-            console.log(result.data[i])
-            student_array.push(result.data[i]);
+            //console.log(result.data[i].hasOwnProperty('id','name','grade','course'))
+            if(result.data[i].hasOwnProperty('id','name','grade','course')){
+                student_array.push(result.data[i]);
+            }
         }
-        console.log(student_array,"student array")
         updateData();
         }});
 
@@ -51,6 +52,13 @@ $(document).ready(function () {
         console.log('add button was clicked');
         addStudentToDom();
     });
+    $("#studentName").keyup(function(event){
+    if(event.keyCode == 13){
+        $("#addButton").click(function(){
+            addStudentToDom();
+        });
+    }
+});
 });
 /**
  * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form

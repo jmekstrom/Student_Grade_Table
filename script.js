@@ -19,11 +19,7 @@ function checklist() {
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
  */
-var nameInput = '';
-var courseInput = '';
-var gradeInput = '';
-var uniqueID = 0;
-
+var inputIds = ['studentName', 'course', 'studentGrade'];
 /**
  * addClicked - Event Handler when user clicks the add button
  */
@@ -47,25 +43,19 @@ $(document).ready(function () {
  * @return undefined
  */
 function addStudent() {
-
-    console.log('add student function was called');
-    newStudent = {};
-    nameInput = $("#studentName").val();
-    courseInput = $("#course").val();
-    gradeInput = $("#studentGrade").val();
-    //check if any of the inputs are blank, if they are then it will call the cancel function.
-    //And alert the user.
-    if ((nameInput === '') || (courseInput === '') || (gradeInput === '') || (gradeInput < 0) || (gradeInput > 100)) {
-        alert('Invalid Input Values');
-        clearAddStudentForm();
-    } else {
-        newStudent.name = nameInput;
-        newStudent.course = courseInput;
-        newStudent.grade = gradeInput;
-        newStudent.ID = uniqueID++;
-        student_array.push(newStudent);
-        updateData();
+    //Creates and empty newStudentObj to create a new student DOM
+    var newStudentObj = {};
+  
+    for (var i = 0; i < inputIds.length; i++) {
+        var id = inputIds[i];
+        var input = $("#" + id);
+        var val = input.val();
+        console.log(newStudentObj[id] = val);
     }
+
+      //check if any of the inputs are blank, if they are then it will call the cancel function.
+    //And alert the user.
+  
     //After a new student has been added we call the clear inputs function to clear the input fields
     clearAddStudentForm();
 }

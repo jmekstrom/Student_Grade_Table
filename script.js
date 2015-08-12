@@ -1,8 +1,28 @@
+
+//on document load ajax call to load table
+$(document).ready(function(){
+    $.ajax({
+        url: "http://s-apis.learningfuze.com/sgt/get", 
+        dataType: "json",
+        error: function() {
+          alert('Error occured!');
+       },
+        success: function(result){
+            for(var i in result.data){
+            console.log(result.data[i])
+            student_array.push(result.data[i]);
+        }
+        console.log(student_array,"student array")
+        updateData();
+        }});
+
+});
 /**
  * Define all global variables here
  */
 var gradeAverage;
 var newStudent = {};
+var uniqueID;
 /**
  * student_array - global array to hold student objects
  * @type {Array}
@@ -19,7 +39,10 @@ function checklist() {
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
  */
-var inputIds = ['studentName', 'course', 'studentGrade'];
+var nameInput = '';
+var courseInput = '';
+var gradeInput = '';
+
 /**
  * addClicked - Event Handler when user clicks the add button
  */
@@ -43,19 +66,27 @@ $(document).ready(function () {
  * @return undefined
  */
 function addStudent() {
-    //Creates and empty newStudentObj to create a new student DOM
-    var newStudentObj = {};
-  
-    for (var i = 0; i < inputIds.length; i++) {
-        var id = inputIds[i];
-        var input = $("#" + id);
-        var val = input.val();
-        console.log(newStudentObj[id] = val);
-    }
 
-      //check if any of the inputs are blank, if they are then it will call the cancel function.
+    console.log('add student function was called');
+    newStudent = {};
+    nameInput = $("#studentName").val();
+    courseInput = $("#course").val();
+    gradeInput = $("#studentGrade").val();
+    //check if any of the inputs are blank, if they are then it will call the cancel function.
     //And alert the user.
-  
+    if ((nameInput === '') || (courseInput === '') || (gradeInput === '') || (gradeInput < 0) || (gradeInput > 100)) {
+        alert('Invalid Input Values');
+        clearAddStudentForm();
+    } else {
+        var d = new Date();
+        var uniqueID = d.getDate();
+        newStudent.name = nameInput;
+        newStudent.course = courseInput;
+        newStudent.grade = gradeInput;
+        newStudent.id = uniqueID;
+        student_array.push(newStudent);
+        updateData();
+    }
     //After a new student has been added we call the clear inputs function to clear the input fields
     clearAddStudentForm();
 }
@@ -112,7 +143,7 @@ function updateStudentList() {
             text: student_array[k].grade
         })
         var newRow = $('<tr>', {
-            'data-index': student_array[k].ID
+            'data-index': student_array[k].id
         })
         var delTD = $('<td>', {
             class: 'delTD',
@@ -122,7 +153,7 @@ function updateStudentList() {
             class: 'btn btn-danger delButton btn-xs',
             'data-index': student_array[k].ID,
             text: 'Remove',
-            onclick: 'deleteStudent(' + student_array[k].ID + ')'
+            onclick: 'deleteStudent(' + student_array[k].id + ')'
         })
         $('tbody').append(newRow);
         $(newRow).append(htmlName, htmlCourse, htmlGrade, delTD);
@@ -204,7 +235,7 @@ $(document).ready(reset());
  **/
 function deleteStudent(objectID) {
     for (var j = 0; j < student_array.length; j++) {
-        if (student_array[j].ID == objectID) {
+        if (student_array[j].id == objectID) {
             console.log('It\'s uniqueID is: ' + student_array[j].ID)
             student_array.splice(j, 1);
         }

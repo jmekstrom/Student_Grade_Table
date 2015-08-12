@@ -44,12 +44,15 @@ function addStudent() {
             return;
         }
         newStudentObj[id] = val;
-        console.log(newStudentObj)
+        //console.log(newStudentObj)
     }
 
     //add newly created object to the global student array
+    var d = new Date();
+    var n = d.getTime();
+    newStudentObj.studentID = n;
     student_array.push(newStudentObj);
-    console.log("student_array after add",student_array);
+    //console.log("student_array after add",student_array);
 
     //clear values from form inputs
     clearAddStudentForm();
@@ -132,16 +135,16 @@ function updateStudentList() {
  * @param studentObj
  */
 function addStudentToDom(studentObj) {
-
+    console.log("studentObj",studentObj)
     //create new row and all columns within the row with the studentObj values
-    var newTableRow = $('<tr>');
+    var ID = studentObj.studentID;
+    var newTableRow = $('<tr id='+ID+'>');
     //doesn't have to be a loop but I like loops :)
     for(var index in studentObj){
         var val = studentObj[index];
         var newCol = $('<td>').html(val);
         newTableRow.append(newCol);
     }
-    console.log(studentObj)
     //create the operations column and action buttons inside
     var deleteBtn = $('<button>').html("Delete").addClass("btn btn-danger btn-sm").attr("onclick","deleteStudent("+studentObj+")");
     var operationsColumn = $('<td>').html(deleteBtn);

@@ -7,7 +7,14 @@
     <script src="script.js"></script>
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
     <style>
-        
+        body{
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
@@ -52,24 +59,25 @@
         </div>
 
 
-        <button type="button" class="btn btn-success" id="addButton" onclick="">Add</button>
+        <button type="button" class="btn btn-success" id="addButton" autofocus>Add</button>
         <button type="button" class="btn btn-default" id="cancelButton" onclick="">Cancel</button>
     </div>
     <div class="student-list-container container col-xs-12 col-sm-8">
-        <table class="student-list table-hover table">
+        <table class="student-list table-hover table" data-url="jsonData.json" data-sort-name="name" data-sort-order="desc">
             <thead>
             <tr>
-                <th>Student Name</th>
-                <th>Student Course</th>
-                <th>Student Grade</th>
-                <th>Operations</th>
+                <th id="name_header">Student Name<span id="name_arrow"></span></th>
+                <th id="course_header">Student Course<span id="course_arrow"></span></span</th>
+                <th id="grade_header">Student Grade<span id="grade_arrow"></span></th>
+                <th id="operations_header">Operations<span id="header_arrow"></span></th>
             </tr>
             </thead>
             <tbody>
 
             </tbody>
         </table>
-        <h3 id="blankTable"></h3>
+
+        <h3 id="blankTable">User Info Unavailable</h3>
     </div>
 </div>
 </body>

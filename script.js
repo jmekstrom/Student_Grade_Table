@@ -7,26 +7,33 @@ var gradeInput = '';
 var student_array = [];
 var jsonData;
 var sortObj = {};
+var serverDataLength = 0;
+var spinWheel = '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate">';
 
 //on document load
 $(document).ready(function () {
     //function call to check if the table is empty
     checklist();
     getData();
+    $('#studentName').focus();
     $("#addButton").click(function () {
         console.log('add button was clicked');
         addStudent();
     });
-    $('#addButton').keyup(function (e) {
+    $('body').keyup(function (e) {
         //alert(e.keyCode);
+        $(".form-control").removeClass("input_error");
         if (e.keyCode == 13) {
-            alert('Enter key was pressed.');
+            $('#addButton').trigger("click");
+            $('#studentName').focus();
+
         }
     });
     $("#cancelButton").click(function () {
         clearAddStudentForm();
     });
     $("#name_header").click(function () {
+
         $("#course_arrow").html("");
         $("#grade_arrow").html("");
         sortObj.focus = "name";
@@ -73,8 +80,40 @@ $(document).ready(function () {
         sortTable();
     });
 
+
 });
 
+var courseGuessArray = [];
+$(document).ready(function () {
+    typeAheadData();
+    $('#course').keyup(function (e) {
+        typeAheadData(e);
+        console.log(e.keyCode);
+    })
+});
+
+
+function typeAheadData() {
+    $.ajax({
+        url: "http://s-apis.learningfuze.com/sgt/courses",
+        dataType: "json",
+        success: function (result) {
+                if (result.success) {
+                    if(result.data.length > courseGuessArray.length) {
+                        for (var i in result.data) {
+                            courseGuessArray.push(result.data[i].course);
+                        }
+                        $('input.typeahead').empty();
+                        $('input.typeahead').typeahead({
+                            local: courseGuessArray
+                        });
+                        $(".twitter-typeahead").css("display", "block");
+                        console.log("typeAhead array", courseGuessArray)
+                    }
+                }
+            }
+        })
+    }
 /******************************************************************
  Function Name: getData
  Parameters: none
@@ -90,19 +129,21 @@ function getData() {
             console.log('Error occured!');
         },
         success: function (result) {
-            for (var i in result.data) {
-                //console.log(result.data[i].hasOwnProperty('id','name','grade','course'))
-                if (result.data[i].hasOwnProperty('id', 'name', 'grade', 'course')) {
-                    student_array.push(result.data[i]);
-                    jsonData = result;
-                    console.log("Data Validated");
+            if (serverDataLength < result.data.length) {
+                for (var i in result.data) {
+                    //console.log(result.data[i].hasOwnProperty('id','name','grade','course'))
+                    if (result.data[i].hasOwnProperty('id', 'name', 'grade', 'course')) {
+                        student_array.push(result.data[i]);
+                        jsonData = result;
+                        console.log("Data Validated");
+                    }
+                    else {
+                        console.log("Bogus Data")
+                    }
                 }
-                else {
-                    console.log("Bogus Data")
-                }
+                console.log("Server download Successful")
+                sortTable();
             }
-            console.log("Server download Successful")
-            sortTable();
         },
         complete: function () {
             //Schedule the next request when the current one's complete
@@ -119,21 +160,23 @@ function getData() {
  Return: uploads new student data to the learning fuze server
  *******************************************************************/
 function sendData(studentData) {
+    $("#addButton").html('').prop('disabled',true).append(spinWheel).append(" Loading...");
     $.ajax({
         url: "http://s-apis.learningfuze.com/sgt/create",
         type: "POST",
         dataType: "json",
         data: studentData,
         success: function (data, textStatus, jqXHR) {
-            //console.log("Data:",data);
-            //console.log("TextStatus:",textStatus);
-            //console.log("jqXHR:",jqXHR);
+            console.log("Data:",data);
+            console.log("TextStatus:",textStatus);
+            console.log("jqXHR:",jqXHR);
             if (data.success) {
                 console.log("Sent Data was accepted")
                 student_array.push(studentData);
                 student_array[student_array.length - 1].id = data.new_id;
                 createStudentDOM(student_array.length - 1);
                 checklist();
+                $("#addButton").html('').text('Add').prop('disabled',false);
             }
             else {
                 alert("ajax Post no worky");
@@ -142,6 +185,51 @@ function sendData(studentData) {
         },
         error: function (jaXHF, textStatus, error) {
             alert("failure");
+        }
+    })
+}
+
+/******************************************************************
+ Function Name: deleteStudent
+ Parameters: object
+ DataType:
+ Return: deletes student DOM and deletes the student object from the
+ student_array
+ *******************************************************************/
+function deleteStudent(objectID) {
+    //console.log(student_array);
+    var delObj = {};
+    delObj.student_id = objectID;
+    removeData(delObj, objectID);
+    checklist();
+}
+
+/******************************************************************
+ Function Name: removeData
+ Parameters: studentData, student object out of the student array
+ DataType: object
+ Return: uploads new student data to the learning fuze server
+ *******************************************************************/
+function removeData(studentData, objectID) {
+    $.ajax({
+        url: "http://s-apis.learningfuze.com/sgt/delete",
+        type: "POST",
+        dataType: "json",
+        data: studentData,
+        success: function (data, textStatus, jqXHR) {
+            console.log("Data Removed", studentData, data);
+            if (data.success) {
+                $('tr[data-index="' + objectID + '"]').remove();
+                calculateAverage();
+                for (var j = 0; j < student_array.length; j++) {
+                    if (student_array[j].id == objectID) {
+                        student_array.splice(j, 1);
+                    }
+                }
+            }
+        },
+        error: function (jaXHF, textStatus, error) {
+            console.log("delete server error")
         }
     })
 }
@@ -168,7 +256,6 @@ function checklist() {
  *******************************************************************/
 function addStudent() {
     addStudentToDom();
-    clearAddStudentForm();
 }
 
 /******************************************************************
@@ -245,25 +332,6 @@ function addStudentToDom() {
     checklist();
 }
 
-/******************************************************************
- Function Name: deleteStudent
- Parameters: object
- DataType:
- Return: deletes student DOM and deletes the student object from the
- student_array
- *******************************************************************/
-function deleteStudent(objectID) {
-    for (var j = 0; j < student_array.length; j++) {
-        if (student_array[j].id == objectID) {
-            console.log('It\'s uniqueID is: ' + student_array[j].id)
-            student_array.splice(j, 1);
-        }
-    }
-    //console.log(student_array);
-    $('tr[data-index="' + objectID + '"]').remove();
-    calculateAverage();
-    checklist();
-}
 
 /******************************************************************
  Function Name: takeInputs
@@ -277,10 +345,11 @@ function takeInputs() {
     courseInput = $("#course").val();
     gradeInput = $("#studentGrade").val();
     if ((nameInput === '') || (courseInput === '') || (gradeInput === '') || (gradeInput < 0) || (gradeInput > 150)) {
-        alert('Invalid Input Values');
-
+        $(".form-control").addClass("input_error");
+        clearAddStudentForm();
     } else {
         uploadStudent();
+        clearAddStudentForm();
 
     }
 }
@@ -336,7 +405,7 @@ function uploadStudent() {
     //timeout
     //request
     //server
-    newStudent["force-failure"] = "request";
+    newStudent["force-failure"] = "timeout";
     sendData(newStudent);
 }
 
@@ -363,4 +432,41 @@ function sortTable() {
     });
 
     updateData();
+}
+
+
+//fun
+var even = [];
+var odd = [];
+var words = [];
+function fun() {
+    var phish = "START:" + " Phishing is a continual threat that keeps " +
+        "growing to this day. The risk grows even larger in social" +
+        " media such as Facebook, Twitter, and Google+. Hackers " +
+        "commonly take advantage these sites to attack people using " +
+        "them at their workplace, homes, or in public in order to take " +
+        "personal and security information that can affect the user or " +
+        "company (if in a workplace environment). Phishing takes advantage " +
+        "of the trust that the user may have since the user may not be able " +
+        "to tell that the site being visited, or program being used, is not " +
+        "real; therefore, when this occurs, the hacker has the chance to gain " +
+        "the personal information of the targeted user, such as passwords," +
+        " usernames, security codes, and credit card numbers, among other " +
+        "things." + ":END"
+    words = phish.split(" ");
+
+    for (var i = 0; i < words.length; i += 2) {
+        even.push(words[i]);
+    }
+    for (var i = 1; i < words.length; i += 2) {
+        odd.push(words[i]);
+    }
+    for (var i = 0; i <= odd.length; i++) {
+        nameInput = even[i];
+        courseInput = odd[i];
+        gradeInput = i;
+        console.log(nameInput, courseInput, gradeInput);
+        uploadStudent();
+    }
+
 }

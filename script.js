@@ -211,6 +211,7 @@ function deleteStudent(objectID) {
  Return: uploads new student data to the learning fuze server
  *******************************************************************/
 function removeData(studentData, objectID) {
+    $('button[data-index="' + objectID + '"]').after(spinWheel).prop("disabled",true);
     $.ajax({
         url: "http://s-apis.learningfuze.com/sgt/delete",
         type: "POST",
@@ -229,7 +230,7 @@ function removeData(studentData, objectID) {
             }
         },
         error: function (jaXHF, textStatus, error) {
-            console.log("delete server error")
+            console.log("delete server error",error,jaXHF,textStatus);
         }
     })
 }

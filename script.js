@@ -98,22 +98,21 @@ function typeAheadData() {
         url: "http://s-apis.learningfuze.com/sgt/courses",
         dataType: "json",
         success: function (result) {
-                if (result.success) {
-                    if(result.data.length > courseGuessArray.length) {
-                        for (var i in result.data) {
-                            courseGuessArray.push(result.data[i].course);
-                        }
-                        $('input.typeahead').empty();
-                        $('input.typeahead').typeahead({
-                            local: courseGuessArray
-                        });
-                        $(".twitter-typeahead").css("display", "block");
-                        console.log("typeAhead array", courseGuessArray)
+            if (result.success) {
+                if (result.data.length > courseGuessArray.length) {
+                    for (var i in result.data) {
+                        courseGuessArray.push(result.data[i].course);
                     }
+                    $('input.typeahead').typeahead({
+                        local: courseGuessArray
+                    });
+                    $(".twitter-typeahead").css("display", "block");
+                    console.log("typeAhead array", courseGuessArray)
                 }
             }
-        })
-    }
+        }
+    })
+}
 /******************************************************************
  Function Name: getData
  Parameters: none
@@ -129,21 +128,25 @@ function getData() {
             console.log('Error occured!');
         },
         success: function (result) {
-            if (serverDataLength < result.data.length) {
+            console.log("checking server")
+            if (serverDataLength != result.data.length) {
                 for (var i in result.data) {
                     //console.log(result.data[i].hasOwnProperty('id','name','grade','course'))
                     if (result.data[i].hasOwnProperty('id', 'name', 'grade', 'course')) {
                         student_array.push(result.data[i]);
                         jsonData = result;
-                        console.log("Data Validated");
                     }
                     else {
                         console.log("Bogus Data")
                     }
                 }
-                console.log("Server download Successful")
-                sortTable();
+                serverDataLength = result.data.length;
             }
+            else{
+                console.log("Already up to date with server")
+            }
+            sortTable();
+
         },
         complete: function () {
             //Schedule the next request when the current one's complete
@@ -160,23 +163,23 @@ function getData() {
  Return: uploads new student data to the learning fuze server
  *******************************************************************/
 function sendData(studentData) {
-    $("#addButton").html('').prop('disabled',true).append(spinWheel).append(" Loading...");
+    $("#addButton").html('').prop('disabled', true).append(spinWheel).append(" Loading...");
     $.ajax({
         url: "http://s-apis.learningfuze.com/sgt/create",
         type: "POST",
         dataType: "json",
         data: studentData,
         success: function (data, textStatus, jqXHR) {
-            console.log("Data:",data);
-            console.log("TextStatus:",textStatus);
-            console.log("jqXHR:",jqXHR);
+            console.log("Data:", data);
+            console.log("TextStatus:", textStatus);
+            console.log("jqXHR:", jqXHR);
             if (data.success) {
                 console.log("Sent Data was accepted")
                 student_array.push(studentData);
                 student_array[student_array.length - 1].id = data.new_id;
                 createStudentDOM(student_array.length - 1);
                 checklist();
-                $("#addButton").html('').text('Add').prop('disabled',false);
+                $("#addButton").html('').text('Add').prop('disabled', false);
             }
             else {
                 alert("ajax Post no worky");
@@ -211,7 +214,7 @@ function deleteStudent(objectID) {
  Return: uploads new student data to the learning fuze server
  *******************************************************************/
 function removeData(studentData, objectID) {
-    $('button[data-index="' + objectID + '"]').after(spinWheel).prop("disabled",true);
+    $('button[data-index="' + objectID + '"]').after(spinWheel).prop("disabled", true);
     $.ajax({
         url: "http://s-apis.learningfuze.com/sgt/delete",
         type: "POST",
@@ -220,7 +223,7 @@ function removeData(studentData, objectID) {
         success: function (data, textStatus, jqXHR) {
             console.log("Data Removed", studentData, data);
             if (data.success) {
-                $('tr[data-index="' + objectID + '"]').remove();
+                $('tr[data-index="' + objectID + '"]').addClass("deleted").fadeOut(750);
                 calculateAverage();
                 for (var j = 0; j < student_array.length; j++) {
                     if (student_array[j].id == objectID) {
@@ -230,7 +233,7 @@ function removeData(studentData, objectID) {
             }
         },
         error: function (jaXHF, textStatus, error) {
-            console.log("delete server error",error,jaXHF,textStatus);
+            console.log("delete server error", error, jaXHF, textStatus);
         }
     })
 }
@@ -406,7 +409,7 @@ function uploadStudent() {
     //timeout
     //request
     //server
-    newStudent["force-failure"] = "timeout";
+    newStudent["force-failure"] = "";
     sendData(newStudent);
 }
 
@@ -431,7 +434,7 @@ function sortTable() {
         }
         return 0;
     });
-
+    
     updateData();
 }
 
@@ -441,19 +444,7 @@ var even = [];
 var odd = [];
 var words = [];
 function fun() {
-    var phish = "START:" + " Phishing is a continual threat that keeps " +
-        "growing to this day. The risk grows even larger in social" +
-        " media such as Facebook, Twitter, and Google+. Hackers " +
-        "commonly take advantage these sites to attack people using " +
-        "them at their workplace, homes, or in public in order to take " +
-        "personal and security information that can affect the user or " +
-        "company (if in a workplace environment). Phishing takes advantage " +
-        "of the trust that the user may have since the user may not be able " +
-        "to tell that the site being visited, or program being used, is not " +
-        "real; therefore, when this occurs, the hacker has the chance to gain " +
-        "the personal information of the targeted user, such as passwords," +
-        " usernames, security codes, and credit card numbers, among other " +
-        "things." + ":END"
+    var phish = "After staking his early campaign on caustic and controversial remarks about undocumented immigrants, Donald J. Trump on Sunday outlined his plan to fix the country’s immigration system and deal with people who are in the country illegally.The position paper, published on Mr. Trump’s website Sunday morning, centered on three principles. The first stated that “a nation without borders is not a nation” — a theme Mr. Trump has made a constant in his stump speeches — and called for a wall to be built along the southern border.He also repeated his promise to make Mexico pay for the wall and laid out how he would do it: largely through increasing fees on border movement between the United States and Mexico.“We will not be taken advantage of anymore,” the plan states. Mr. Trump’s proposal also calls for strengthening the “enforcement arm” of the Immigration and Customs Enforcement office, to be paid for by “eliminating tax credit payments to illegal immigrants.” Continue reading the main story RELATED COVERAGE Donald Trump arrived by helicopter at the Iowa State Fair in Des Moines on Saturday. His campaign later offered children rides on the chopper.Reporter's Notebook: Excess in Iowa: 90°, a Butter Cow and Rides on Donald Trump’s HelicopterAUG. 15, 2015 First Draft: Donald Trump Takes On China After DevaluationAUG. 12, 2015 Donald Trump Defines His Style: Deal-Making FlexibilityAUG. 11, 2015 Donald Trump officially announcing his campaign for the presidency on Tuesday.First Draft: Choice Words From Donald Trump, Presidential CandidateJUNE 16, 2015 Donald Trump, Pushing Someone Rich, Offers HimselfJUNE 16, 2015 Donald J. Trump on Tuesday in New York, where he announced his candidacy.Donald Trump on the IssuesJUNE 16, 2015 Donald Trump in Greenville, S.C., in May.What Donald Trump Would Need to Do to WinJUNE 16, 2015 Mr. Trump’s campaign released the plan moments after the candidate appeared in a wide-ranging interview with NBC’s Chuck Todd on “Meet the Press,” during which Mr. Trump spoke broadly about his plans to deport undocumented immigrants."
     words = phish.split(" ");
 
     for (var i = 0; i < words.length; i += 2) {
@@ -465,9 +456,9 @@ function fun() {
     for (var i = 0; i <= odd.length; i++) {
         nameInput = even[i];
         courseInput = odd[i];
-        gradeInput = i;
+        gradeInput = 100;
         console.log(nameInput, courseInput, gradeInput);
-        uploadStudent();
+       // uploadStudent();
     }
 
 }

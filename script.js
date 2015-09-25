@@ -150,7 +150,7 @@ function getData() {
         },
         complete: function () {
             //Schedule the next request when the current one's complete
-            setTimeout(getData, 10000);
+            setTimeout(getData, 1000000);
         }
     });
 }

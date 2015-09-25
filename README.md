@@ -1,21 +1,18 @@
-<h1>Todo List</h1>
+<h1>Student Grade Table</h1>
 
 <h2>Project Description:</h2>
-Full stack todo list project.  The objective was to make a single page todo list web application.
-This todo list app can create new users and access existing user information.  See features list for
-more details.
+This is a javascript based single page web application that is used to store a table
+of students, what courses they are enrolled in, and their grade.  Communicates with a database to store
+student information.
 
 <h2>Feature List:</h2>
-- Create new users
-- Access existing user information
-- Due Date functionality
-- Add new tasks
-- Edit existing tasks
-- Diplays extra task details
-- Priority Labeling
-- Sorts tasks based on due date and priority
-- Check off completed items (soft delete)
-- Delete task (hard delete)
+- Add New Students
+- Delete Students
+- Type Ahead Functionality when inputing course (shows previously added courses)
+- Sort by column accending or descending
+- Calculates overall grade average
+- Single Page Javascript application
+- Loading animations
 
 <h2>3 Things I learned:</h2>
  - AJAX calls

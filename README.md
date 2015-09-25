@@ -22,6 +22,7 @@ student information.
 
 <h2>Screenshots of Application:</h2>
    ![Alt text](/screenshots/pic1.png)
+   ![Alt text](/screenshots/pic2.png)
 
 <h2>Link to Live Preview:</h2>
 <a href="http://jmekstrom.github.io/Student_Grade_Table" target="_blank">Click here to see a live preview</a>
